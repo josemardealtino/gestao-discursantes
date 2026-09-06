@@ -1963,3 +1963,9 @@ html{
 @media(min-width:761px){
   .mobile-member-picker{display:none}
 }
+
+
+/* V23 - template do secretário */
+#secretary-template{
+  min-height:240px;
+}

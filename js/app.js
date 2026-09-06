@@ -80,9 +80,20 @@ const DEFAULT_SECRETARY_TEMPLATE = `Oi! Tudo bem? \u{1F60A}
 
 Segue a programação dos discursos da reunião sacramental de *{data}*:
 
-\u{1F399}\u{FE0F} *1º orador:* {orador_1} — {tempo_1} min
-\u{1F399}\u{FE0F} *2º orador:* {orador_2} — {tempo_2} min
-\u{1F399}\u{FE0F} *3º orador:* {orador_3} — {tempo_3} min
+\u{1F399}\u{FE0F} *1º discursante*
+*Nome:* {orador_1}
+*Tema:* {tema_1}
+*Tempo:* {tempo_1} min
+
+\u{1F399}\u{FE0F} *2º discursante*
+*Nome:* {orador_2}
+*Tema:* {tema_2}
+*Tempo:* {tempo_2} min
+
+\u{1F399}\u{FE0F} *3º discursante*
+*Nome:* {orador_3}
+*Tema:* {tema_3}
+*Tempo:* {tempo_3} min
 
 Obrigado! \u{1F64F}`;
 
@@ -111,7 +122,10 @@ function isLegacySecretaryTemplate(value) {
   return (
     text.includes("Seguem os discursantes da reunião sacramental") ||
     text.includes("Olá! Seguem os discursantes") ||
-    text.includes("1º orador — {orador_1}")
+    text.includes("1º orador — {orador_1}") ||
+    !text.includes("{tema_1}") ||
+    !text.includes("{tema_2}") ||
+    !text.includes("{tema_3}")
   );
 }
 
@@ -1243,8 +1257,17 @@ function renderMemberResults(order) {
 }
 
 function selectMember(order, member) {
+  const previousMemberId = Number($(`member-id-${order}`).value || 0);
+
   $(`member-search-${order}`).value = member.nome_completo;
   $(`member-id-${order}`).value = member.id;
+
+  // Se o usuário trocar o membro manualmente, o status do convite
+  // não pode continuar herdado do discursante anterior.
+  if (previousMemberId && previousMemberId !== member.id) {
+    $(`status-${order}`).value = "nao_enviado";
+  }
+
   hideAutocomplete(order, "member");
   renderMemberHistory(order, member);
 }
@@ -1424,13 +1447,18 @@ function collectAssignments() {
       throw new Error(`Informe uma duração válida para o ${order}º orador.`);
     }
 
+    const previousAssignment = state.currentAssignments.find(
+      (item) => item.ordem === order && item.membro_id === memberId
+    );
+
     rows.push({
       reuniao_id: state.activeMeeting.id,
       membro_id: memberId,
       ordem: order,
       tema_id: themeId || null,
       duracao_minutos: duration,
-      status_convite: $(`status-${order}`).value
+      status_convite: $(`status-${order}`).value,
+      convite_enviado_em: previousAssignment?.convite_enviado_em || null
     });
   }
 
@@ -1682,16 +1710,26 @@ function buildSecretaryMessage() {
     return state.members.find((m) => m.id === row.membro_id)?.nome_completo || "A definir";
   };
 
+  const getThemeName = (order) => {
+    const row = byOrder[order];
+    if (!row?.tema_id) return "A definir";
+    return state.themes.find((t) => t.id === row.tema_id)?.titulo || "A definir";
+  };
+
   const getTime = (order) => byOrder[order]?.duracao_minutos || "—";
 
   return replaceTemplate(template, {
     data: fmtDate(state.activeMeeting.data),
     orador_1: getMemberName(1),
-    orador_2: getMemberName(2),
-    orador_3: getMemberName(3),
+    tema_1: getThemeName(1),
     tempo_1: getTime(1),
+    orador_2: getMemberName(2),
+    tema_2: getThemeName(2),
     tempo_2: getTime(2),
-    tempo_3: getTime(3)
+    orador_3: getMemberName(3),
+    tema_3: getThemeName(3),
+    tempo_3: getTime(3),
+    secretario_nome: state.settings?.secretario_nome || ""
   });
 }
 
