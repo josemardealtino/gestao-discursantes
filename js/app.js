@@ -472,6 +472,9 @@ window.openMeeting = function(id) {
   $("meeting-dialog").showModal();
 };
 
+$("close-meeting-dialog")?.addEventListener("click", () => $("meeting-dialog").close());
+$("cancel-meeting-btn")?.addEventListener("click", () => $("meeting-dialog").close());
+
 $("meeting-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -521,6 +524,31 @@ function setupNavigation(selector) {
 
 setupNavigation(".side-nav-item");
 setupNavigation(".bottom-nav-item");
+
+function setMobileMenu(open) {
+  document.querySelector(".sidebar")?.classList.toggle("mobile-open", open);
+  $("mobile-menu-overlay")?.classList.toggle("show", open);
+  const button = $("mobile-menu-btn");
+  if (button) {
+    button.setAttribute("aria-expanded", String(open));
+    button.innerHTML = open
+      ? '<i class="fa-solid fa-xmark"></i>'
+      : '<i class="fa-solid fa-bars"></i>';
+  }
+  document.body.classList.toggle("menu-open", open);
+}
+
+$("mobile-menu-btn")?.addEventListener("click", () => {
+  const open = !document.querySelector(".sidebar")?.classList.contains("mobile-open");
+  setMobileMenu(open);
+});
+
+$("mobile-menu-overlay")?.addEventListener("click", () => setMobileMenu(false));
+
+document.querySelectorAll(".side-nav-item").forEach((button) => {
+  button.addEventListener("click", () => setMobileMenu(false));
+});
+
 
 document.querySelectorAll('[data-page="settings-page"]').forEach((btn) => {
   btn.addEventListener("click", async () => {
@@ -707,16 +735,18 @@ function renderThemes() {
   });
 
   const preferredOrder = [
-    "Opções especiais",
     "Conferência Geral de Abril de 2026",
     "Conferência Geral de Outubro de 2025",
     "Princípios do Evangelho",
     "Tópicos do Evangelho",
     "Força dos Jovens",
-    "Meus temas"
+    "Meus temas",
+    "Opções especiais"
   ];
 
   const entries = Object.entries(grouped).sort(([a], [b]) => {
+    if (a === "Opções especiais") return 1;
+    if (b === "Opções especiais") return -1;
     const ia = preferredOrder.indexOf(a);
     const ib = preferredOrder.indexOf(b);
     if (ia !== -1 || ib !== -1) {
@@ -1171,16 +1201,18 @@ function renderThemeGroupedPicker(order, query = "") {
   });
 
   const preferredOrder = [
-    "Opções especiais",
     "Conferência Geral de Abril de 2026",
     "Conferência Geral de Outubro de 2025",
     "Princípios do Evangelho",
     "Tópicos do Evangelho",
     "Força dos Jovens",
-    "Meus temas"
+    "Meus temas",
+    "Opções especiais"
   ];
 
   const groups = Object.entries(grouped).sort(([a], [b]) => {
+    if (a === "Opções especiais") return 1;
+    if (b === "Opções especiais") return -1;
     const ia = preferredOrder.indexOf(a);
     const ib = preferredOrder.indexOf(b);
     if (ia !== -1 || ib !== -1) {
@@ -1720,4 +1752,8 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && $("theme-dialog")?.open) {
     $("theme-dialog").close();
   }
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 900) setMobileMenu(false);
 });

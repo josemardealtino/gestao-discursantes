@@ -102,8 +102,13 @@
         </div>
       </aside>
 
+      <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+
       <div class="workspace">
         <header class="workspace-header">
+          <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+          </button>
           <div class="workspace-header-main">
             <img src="./assets/church-icon.png" alt="" class="workspace-header-icon mobile-header-icon" />
             <div>
@@ -159,7 +164,7 @@
                 <p class="muted page-description">Nome e WhatsApp dos membros da ala.</p>
               </div>
 
-              <button id="new-member-btn" class="btn btn-primary">
+              <button id="new-member-btn" class="btn btn-primary btn-nowrap">
                 <i class="fa-solid fa-plus"></i>
                 <span>Novo membro</span>
               </button>
@@ -184,7 +189,7 @@
                 <p class="muted page-description">Conteúdos oficiais organizados por coleção e temas personalizados.</p>
               </div>
 
-              <button id="new-theme-btn" class="btn btn-primary">
+              <button id="new-theme-btn" class="btn btn-primary btn-nowrap">
                 <i class="fa-solid fa-plus"></i>
                 <span>Novo tema</span>
               </button>
@@ -360,7 +365,7 @@
           <h2 id="meeting-dialog-title">Editar reunião</h2>
         </div>
 
-        <button id="close-theme-dialog" class="icon-btn icon-btn-small" type="button" aria-label="Fechar">
+        <button id="close-meeting-dialog" class="icon-btn icon-btn-small" type="button" aria-label="Fechar">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -381,7 +386,7 @@
       </label>
 
       <div class="modal-actions">
-        <button class="btn btn-secondary" value="cancel">Cancelar</button>
+        <button id="cancel-meeting-btn" class="btn btn-secondary" type="button">Cancelar</button>
         <button id="save-meeting-btn" class="btn btn-primary" value="default">Salvar alterações</button>
       </div>
     </form>

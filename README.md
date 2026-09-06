@@ -1,28 +1,13 @@
-# Gestão Sacramental — V19
+# Gestão Sacramental — V20
 
-Nova funcionalidade: lembrete de discurso.
-
-## Configurações
-- Nova seção `Lembretes`.
-- Template personalizável.
-- Variáveis:
-  - {primeiro_nome}
-  - {data}
-  - {ordem}
-  - {tema}
-- Botão para restaurar o modelo padrão.
-
-## Programação
-- Cada orador agora possui um botão `Enviar lembrete`.
-- O lembrete usa o WhatsApp cadastrado do membro.
-- Usa o mesmo mecanismo de URL do WhatsApp já validado na V18.
-- Não altera o status do convite.
-- Caso o membro não tenha WhatsApp, o app avisa.
-
-## Banco
-Execute uma única vez o arquivo:
-`07_template_lembrete.sql`
-
-Ele adiciona o campo `template_lembrete` na tabela `configuracoes`.
-
-As demais funcionalidades da V18 foram mantidas.
+Refinamento mobile baseado em teste real no iPhone:
+- menu hamburger/drawer no mobile; removida barra inferior flutuante;
+- seletores SET e ano compactados;
+- caixa de data com mais respiro;
+- Novo Tema e Novo Membro em uma linha;
+- Opções especiais sempre por último;
+- ações de discursante em uma coluna no mobile;
+- botão Limpar refinado;
+- correção de scroll duplo no modal de discursantes para iOS;
+- correção do botão fechar da edição de reunião;
+- demais funcionalidades mantidas.
