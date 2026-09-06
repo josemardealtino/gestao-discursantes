@@ -1756,3 +1756,89 @@ input:focus,select:focus,textarea:focus{border-color:#9bb8f5;box-shadow:0 0 0 3p
   .library-group-title strong{font-size:.84rem;line-height:1.25}
   .themes-library{padding:12px;gap:8px}
 }
+
+
+/* V21 - refinamentos finais de UX no iPhone */
+
+/* Texto alternativo do botão Salvar */
+.save-label-mobile{display:none}
+
+/* Evita zoom automático do Safari ao focar campos menores que 16px.
+   Mantém o zoom manual do usuário disponível. */
+@media(max-width:900px){
+  input,
+  select,
+  textarea{
+    font-size:16px !important;
+  }
+
+  button,
+  .btn,
+  .icon-btn,
+  .mobile-menu-btn,
+  .theme-picker-trigger,
+  .library-group-header,
+  .autocomplete-item,
+  .theme-option{
+    touch-action:manipulation;
+  }
+}
+
+@media(max-width:560px){
+  /* Ações do secretário seguem o mesmo padrão dos discursantes */
+  .secretary-actions{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+    width:100%;
+  }
+  .secretary-actions .btn{
+    width:100%;
+    min-height:46px;
+    justify-content:center;
+    white-space:nowrap;
+    padding:10px 14px;
+  }
+
+  /* Rodapé da programação: dois botões lado a lado, sem quebra */
+  .speakers-footer{
+    display:block !important;
+  }
+  .speakers-footer > div{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:8px !important;
+    width:100%;
+  }
+  .speakers-footer .btn{
+    width:100%;
+    min-width:0;
+    min-height:46px;
+    padding:10px 10px !important;
+    white-space:nowrap !important;
+    font-size:.9rem;
+  }
+  #cancel-speakers-btn{
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  #save-speakers-btn{
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .save-label-desktop{display:none}
+  .save-label-mobile{display:inline}
+
+  /* Reduz a chance de gestos acidentais alterarem o zoom durante interação */
+  .speaker-slot-actions,
+  .secretary-actions,
+  .speakers-footer{
+    touch-action:pan-y;
+  }
+}
+
+/* Em telas um pouco maiores, mantém o nome completo do botão salvar */
+@media(min-width:561px){
+  .save-label-desktop{display:inline}
+  .save-label-mobile{display:none}
+}
