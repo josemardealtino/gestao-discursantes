@@ -674,12 +674,19 @@ $("member-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const id = $("member-id").value;
+  const memberName = $("member-name").value.trim();
+
+  if (!memberName) return;
+
+  if (/@/.test(memberName) || /\b[^\s@]+@[^\s@]+\.[^\s@]+\b/i.test(memberName)) {
+    alert("O nome do membro parece conter um endereço de e-mail. Revise o campo Nome completo antes de salvar.");
+    return;
+  }
+
   const payload = {
-    nome_completo: $("member-name").value.trim(),
+    nome_completo: memberName,
     whatsapp: normalizeWhatsapp($("member-whatsapp").value)
   };
-
-  if (!payload.nome_completo) return;
 
   const query = id
     ? client.from("membros").update(payload).eq("id", id)
@@ -1145,8 +1152,7 @@ function renderMobileMemberPickerResults(query = "") {
 
   const q = normalizeSearch(query);
   const rows = state.members
-    .filter((m) => !q || normalizeSearch(m.nome_completo).includes(q))
-    .slice(0, 80);
+    .filter((m) => !q || normalizeSearch(m.nome_completo).includes(q));
 
   container.innerHTML = rows.length ? rows.map((member) => {
     const history = state.memberHistory[String(member.id)];
@@ -1221,8 +1227,7 @@ function renderMemberResults(order) {
   const q = normalizeSearch(input.value);
 
   const rows = state.members
-    .filter((m) => !q || normalizeSearch(m.nome_completo).includes(q))
-    .slice(0, 10);
+    .filter((m) => !q || normalizeSearch(m.nome_completo).includes(q));
 
   if (!rows.length) {
     results.innerHTML = `<div class="autocomplete-empty">Nenhum membro encontrado.</div>`;

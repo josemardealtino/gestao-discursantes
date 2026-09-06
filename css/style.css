@@ -1969,3 +1969,10 @@ html{
 #secretary-template{
   min-height:240px;
 }
+
+
+/* V25 - listas completas de membros */
+.autocomplete-results,
+.mobile-member-picker-results{
+  overscroll-behavior:contain;
+}
