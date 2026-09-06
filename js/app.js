@@ -1084,12 +1084,110 @@ document.querySelectorAll(".clear-speaker-btn").forEach((button) => {
 document.querySelectorAll(".member-autocomplete").forEach((input) => {
   const order = Number(input.dataset.order);
 
-  input.addEventListener("focus", () => renderMemberResults(order));
+  input.addEventListener("pointerdown", (event) => {
+    if (!isMobileMemberPickerMode()) return;
+    event.preventDefault();
+    input.blur();
+    openMobileMemberPicker(order);
+  });
+
+  input.addEventListener("focus", () => {
+    if (isMobileMemberPickerMode()) {
+      input.blur();
+      return;
+    }
+    renderMemberResults(order);
+  });
+
   input.addEventListener("input", () => {
+    if (isMobileMemberPickerMode()) return;
     $(`member-id-${order}`).value = "";
     renderMemberResults(order);
   });
 });
+
+
+let activeMobileMemberOrder = null;
+
+function isMobileMemberPickerMode() {
+  return window.matchMedia("(max-width: 760px)").matches;
+}
+
+function syncMemberInputsForViewport() {
+  document.querySelectorAll(".member-autocomplete").forEach((input) => {
+    if (isMobileMemberPickerMode()) {
+      input.setAttribute("readonly", "readonly");
+      input.setAttribute("inputmode", "none");
+    } else {
+      input.removeAttribute("readonly");
+      input.setAttribute("inputmode", "search");
+    }
+  });
+}
+
+function renderMobileMemberPickerResults(query = "") {
+  const container = $("member-picker-results");
+  if (!container) return;
+
+  const q = normalizeSearch(query);
+  const rows = state.members
+    .filter((m) => !q || normalizeSearch(m.nome_completo).includes(q))
+    .slice(0, 80);
+
+  container.innerHTML = rows.length ? rows.map((member) => {
+    const history = state.memberHistory[String(member.id)];
+    const historyLabel = history?.ultimo_discurso
+      ? `Último discurso: ${fmtDate(history.ultimo_discurso)}`
+      : "Nunca discursou";
+    const phoneLabel = member.whatsapp ? "WhatsApp cadastrado" : "Sem WhatsApp";
+
+    return `
+      <button class="mobile-member-picker-item" type="button" data-mobile-member-id="${member.id}">
+        <span>
+          <strong>${escapeHtml(member.nome_completo)}</strong>
+          <span>${historyLabel} • ${phoneLabel}</span>
+        </span>
+        ${member.whatsapp ? '<i class="fa-brands fa-whatsapp" style="color:#1f9d62"></i>' : ''}
+      </button>
+    `;
+  }).join("") : `<div class="autocomplete-empty">Nenhum membro encontrado.</div>`;
+
+  container.querySelectorAll("[data-mobile-member-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const member = state.members.find((m) => m.id === Number(button.dataset.mobileMemberId));
+      if (!member || !activeMobileMemberOrder) return;
+      selectMember(activeMobileMemberOrder, member);
+      $("member-picker-dialog").close();
+    });
+  });
+}
+
+function openMobileMemberPicker(order) {
+  activeMobileMemberOrder = order;
+  const dialog = $("member-picker-dialog");
+  const search = $("member-picker-search");
+  if (!dialog || !search) return;
+
+  search.value = "";
+  renderMobileMemberPickerResults();
+  dialog.showModal();
+
+  // Aguarda o bottom sheet entrar no top-layer antes do foco.
+  setTimeout(() => {
+    search.focus({ preventScroll: true });
+  }, 80);
+}
+
+$("close-member-picker")?.addEventListener("click", () => {
+  $("member-picker-dialog").close();
+});
+
+$("member-picker-search")?.addEventListener("input", (event) => {
+  renderMobileMemberPickerResults(event.target.value);
+});
+
+syncMemberInputsForViewport();
+window.addEventListener("resize", syncMemberInputsForViewport);
 
 document.querySelectorAll(".theme-picker-trigger").forEach((button) => {
   button.addEventListener("click", (event) => {
