@@ -1,17 +1,13 @@
-# Gestão Sacramental — V26
+# Gestão Sacramental — V27
 
-A agenda inicial agora mostra, para cada discursante:
+Ajuste visual da Agenda:
 
-- nome;
-- status do convite;
-- categoria/coleção do tema;
-- título do tema;
-- duração em minutos.
+- removida a categoria/coleção do tema nos cards da tela inicial;
+- mantido o título do tema;
+- mantida a duração em minutos;
+- mantidos nome e status do convite;
+- tema usa um pequeno ícone de lâmpada para facilitar leitura;
+- layout ficou mais limpo no desktop e mobile.
 
-Para Conferência Geral, quando disponível, a categoria usa a edição específica
-(ex.: Conferência Geral de Abril de 2026).
-
-Em telas menores, o layout reorganiza essas informações sem estourar o card.
-
-PWA/cache atualizado para V26.
+PWA/cache atualizado para V27.
 Não há alteração de banco.

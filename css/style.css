@@ -2073,3 +2073,39 @@ html{
     max-width:105px;
   }
 }
+
+
+/* V27 - agenda mais limpa: apenas tema + duração */
+.assignment-theme-line{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center;
+  gap:8px !important;
+}
+.assignment-theme-category{
+  display:none !important;
+}
+.assignment-theme-title{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#667487;
+}
+.assignment-theme-title i{
+  flex:0 0 auto;
+  font-size:.66rem;
+  color:#8a9ab0;
+}
+.assignment-duration{
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+@media(max-width:560px){
+  .assignment-theme-line{
+    grid-template-columns:minmax(0,1fr) auto !important;
+  }
+}

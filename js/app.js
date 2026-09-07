@@ -349,7 +349,7 @@ async function loadMonth() {
           status_convite,
           convite_enviado_em,
           membros ( nome_completo, whatsapp ),
-          temas ( titulo, url, categoria, autor, edicao_origem )
+          temas ( titulo, url, categoria, autor )
         `)
         .in("reuniao_id", ids)
         .order("ordem");
@@ -373,22 +373,6 @@ async function loadMonth() {
   }
 }
 
-function meetingThemeCategoryLabel(theme) {
-  if (!theme) return "Tema a definir";
-
-  if (theme.categoria === "conferencia_geral") {
-    return theme.edicao_origem || "Conferência Geral";
-  }
-
-  return ({
-    topicos_evangelho: "Tópicos do Evangelho",
-    principios_evangelho: "Princípios do Evangelho",
-    forca_dos_jovens: "Força dos Jovens",
-    opcoes_especiais: "Opções especiais",
-    personalizado: "Tema personalizado"
-  })[theme.categoria] || themeCategoryLabel(theme.categoria);
-}
-
 function renderMeetings() {
   const container = $("sundays-list");
 
@@ -410,7 +394,6 @@ function renderMeetings() {
         <div class="assignment-summary">
           ${meeting.assignments.map((a) => {
             const themeTitle = a.temas?.titulo || "Tema a definir";
-            const categoryLabel = meetingThemeCategoryLabel(a.temas);
             const duration = a.duracao_minutos ? `${a.duracao_minutos} min` : "Tempo a definir";
 
             return `
@@ -427,8 +410,10 @@ function renderMeetings() {
                   </div>
 
                   <div class="assignment-theme-line">
-                    <span class="assignment-theme-category">${escapeHtml(categoryLabel)}</span>
-                    <span class="assignment-theme-title" title="${escapeAttr(themeTitle)}">${escapeHtml(themeTitle)}</span>
+                    <span class="assignment-theme-title" title="${escapeAttr(themeTitle)}">
+                      <i class="fa-regular fa-lightbulb"></i>
+                      ${escapeHtml(themeTitle)}
+                    </span>
                     <span class="assignment-duration">
                       <i class="fa-regular fa-clock"></i>
                       ${escapeHtml(duration)}

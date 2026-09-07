@@ -1,10 +1,10 @@
-const CACHE_NAME = "gestao-sacramental-v26";
+const CACHE_NAME = "gestao-sacramental-v27";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./css/style.css?v=26",
-  "./js/config.js?v=26",
-  "./js/app.js?v=26",
+  "./css/style.css?v=27",
+  "./js/config.js?v=27",
+  "./js/app.js?v=27",
   "./manifest.webmanifest",
   "./assets/church-icon.png",
   "./assets/apple-touch-icon.png",
