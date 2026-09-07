@@ -1,12 +1,17 @@
-# Gestão Sacramental — V25
+# Gestão Sacramental — V26
 
-Correções:
-- removido limite artificial de 10 membros no seletor desktop;
-- removido limite artificial de 80 membros no seletor mobile;
-- agora é possível rolar por toda a lista carregada;
-- busca continua pesquisando todos os membros;
-- novos cadastros/edições bloqueiam nome contendo e-mail;
-- incluído `08_auditoria_membros.sql` para localizar cadastros suspeitos;
-- cache do PWA atualizado para V25.
+A agenda inicial agora mostra, para cada discursante:
 
-Com ~400 membros, não há necessidade técnica de paginação agora.
+- nome;
+- status do convite;
+- categoria/coleção do tema;
+- título do tema;
+- duração em minutos.
+
+Para Conferência Geral, quando disponível, a categoria usa a edição específica
+(ex.: Conferência Geral de Abril de 2026).
+
+Em telas menores, o layout reorganiza essas informações sem estourar o card.
+
+PWA/cache atualizado para V26.
+Não há alteração de banco.

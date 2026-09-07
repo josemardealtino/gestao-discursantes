@@ -349,7 +349,7 @@ async function loadMonth() {
           status_convite,
           convite_enviado_em,
           membros ( nome_completo, whatsapp ),
-          temas ( titulo, url, categoria, autor )
+          temas ( titulo, url, categoria, autor, edicao_origem )
         `)
         .in("reuniao_id", ids)
         .order("ordem");
@@ -373,6 +373,22 @@ async function loadMonth() {
   }
 }
 
+function meetingThemeCategoryLabel(theme) {
+  if (!theme) return "Tema a definir";
+
+  if (theme.categoria === "conferencia_geral") {
+    return theme.edicao_origem || "Conferência Geral";
+  }
+
+  return ({
+    topicos_evangelho: "Tópicos do Evangelho",
+    principios_evangelho: "Princípios do Evangelho",
+    forca_dos_jovens: "Força dos Jovens",
+    opcoes_especiais: "Opções especiais",
+    personalizado: "Tema personalizado"
+  })[theme.categoria] || themeCategoryLabel(theme.categoria);
+}
+
 function renderMeetings() {
   const container = $("sundays-list");
 
@@ -392,16 +408,36 @@ function renderMeetings() {
     if (meeting.tipo_reuniao === "discursos" && meeting.assignments?.length) {
       body = `
         <div class="assignment-summary">
-          ${meeting.assignments.map((a) => `
-            <div class="assignment-row">
-              <span class="assignment-order">${a.ordem}º</span>
-              <span class="assignment-name">${escapeHtml(a.membros?.nome_completo || "Membro")}</span>
-              <span class="assignment-status assignment-status-${a.status_convite || "nao_enviado"}">
-                <span class="assignment-status-dot ${a.status_convite || "nao_enviado"}"></span>
-                ${statusLabels[a.status_convite] || "Não enviado"}
-              </span>
-            </div>
-          `).join("")}
+          ${meeting.assignments.map((a) => {
+            const themeTitle = a.temas?.titulo || "Tema a definir";
+            const categoryLabel = meetingThemeCategoryLabel(a.temas);
+            const duration = a.duracao_minutos ? `${a.duracao_minutos} min` : "Tempo a definir";
+
+            return `
+              <div class="assignment-row assignment-row-detailed">
+                <span class="assignment-order">${a.ordem}º</span>
+
+                <div class="assignment-details">
+                  <div class="assignment-main-line">
+                    <span class="assignment-name">${escapeHtml(a.membros?.nome_completo || "Membro")}</span>
+                    <span class="assignment-status assignment-status-${a.status_convite || "nao_enviado"}">
+                      <span class="assignment-status-dot ${a.status_convite || "nao_enviado"}"></span>
+                      ${statusLabels[a.status_convite] || "Não enviado"}
+                    </span>
+                  </div>
+
+                  <div class="assignment-theme-line">
+                    <span class="assignment-theme-category">${escapeHtml(categoryLabel)}</span>
+                    <span class="assignment-theme-title" title="${escapeAttr(themeTitle)}">${escapeHtml(themeTitle)}</span>
+                    <span class="assignment-duration">
+                      <i class="fa-regular fa-clock"></i>
+                      ${escapeHtml(duration)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
         </div>
       `;
     } else {

@@ -1976,3 +1976,100 @@ html{
 .mobile-member-picker-results{
   overscroll-behavior:contain;
 }
+
+
+/* V26 - tema, categoria e duração na agenda */
+.assignment-row-detailed{
+  display:grid;
+  grid-template-columns:24px minmax(0,1fr);
+  gap:8px;
+  align-items:start;
+  padding:8px 0;
+}
+.assignment-row-detailed + .assignment-row-detailed{
+  border-top:1px solid rgba(226,232,240,.72);
+}
+.assignment-details{
+  min-width:0;
+}
+.assignment-main-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-width:0;
+}
+.assignment-main-line .assignment-name{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-weight:500;
+}
+.assignment-theme-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top:5px;
+  min-width:0;
+  color:var(--muted);
+  font-size:.69rem;
+}
+.assignment-theme-category{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  max-width:145px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#f1f5fb;
+  color:#52637a;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.assignment-theme-title{
+  min-width:0;
+  flex:1 1 auto;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#667487;
+}
+.assignment-duration{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  white-space:nowrap;
+  color:#667487;
+}
+.assignment-duration i{
+  font-size:.65rem;
+}
+
+@media(max-width:560px){
+  .assignment-row-detailed{
+    grid-template-columns:22px minmax(0,1fr);
+    padding:10px 0;
+  }
+  .assignment-main-line{
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:5px 8px;
+  }
+  .assignment-main-line .assignment-name{
+    flex:1 1 100%;
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
+  }
+  .assignment-theme-line{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:6px;
+  }
+  .assignment-theme-category{
+    max-width:105px;
+  }
+}
